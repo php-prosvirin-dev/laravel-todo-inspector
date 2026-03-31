@@ -13,6 +13,8 @@ class TodoIndexRequest extends FormRequest
 
     public function rules(): array
     {
+        $availableLocales = array_keys(config('todo-inspector.locales', ['en', 'ru', 'uk']));
+
         return [
             'type' => 'nullable|string|in:TODO,FIXME,HACK,REVIEW,NOTE',
             'priority' => 'nullable|string|in:LOW,MEDIUM,HIGH,CRITICAL',
@@ -20,7 +22,7 @@ class TodoIndexRequest extends FormRequest
             'search' => 'nullable|string|max:255',
             'sort' => 'nullable|string|in:created_at,updated_at,file_path,type,priority,status',
             'direction' => 'nullable|string|in:asc,desc',
-            'lang' => 'nullable|string|in:en,ru,uk,pl,de,fr,es,zh,ja',
+            'lang' => 'nullable|string|in:'.implode(',', $availableLocales),
             'page' => 'nullable|integer|min:1',
         ];
     }

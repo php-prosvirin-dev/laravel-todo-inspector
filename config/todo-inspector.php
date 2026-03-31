@@ -11,15 +11,15 @@ return [
     ],
 
     'locales' => [
-        'en' => 'English',
-        'ru' => 'Русский',
-        'uk' => 'Українська',
-        'pl' => 'Polski',
-        'de' => 'Deutsch',
-        'fr' => 'Français',
-        'es' => 'Español',
-        'zh' => '中文',
-        'ja' => '日本語',
+        'en' => ['flag' => '🇬🇧', 'name' => 'English'],
+        'ru' => ['flag' => '🇷🇺', 'name' => 'Русский'],
+        'uk' => ['flag' => '🇺🇦', 'name' => 'Українська'],
+        'pl' => ['flag' => '🇵🇱', 'name' => 'Polski'],
+        'de' => ['flag' => '🇩🇪', 'name' => 'Deutsch'],
+        'fr' => ['flag' => '🇫🇷', 'name' => 'Français'],
+        'es' => ['flag' => '🇪🇸', 'name' => 'Español'],
+        'zh' => ['flag' => '🇨🇳', 'name' => '中文'],
+        'ja' => ['flag' => '🇯🇵', 'name' => '日本語'],
     ],
 
     'extensions' => [

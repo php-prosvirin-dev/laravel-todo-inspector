@@ -5,17 +5,10 @@
     $isDark = $configTheme === 'dark' || ($configTheme === 'auto' && $savedTheme === 'dark');
 
     $currentLocale = app()->getLocale();
-    $locales = [
+    $locales = config('todo-inspector.locales', [
         'en' => ['flag' => '🇬🇧', 'name' => 'English'],
         'ru' => ['flag' => '🇷🇺', 'name' => 'Русский'],
-        'uk' => ['flag' => '🇺🇦', 'name' => 'Українська'],
-        'pl' => ['flag' => '🇵🇱', 'name' => 'Polski'],
-        'de' => ['flag' => '🇩🇪', 'name' => 'Deutsch'],
-        'fr' => ['flag' => '🇫🇷', 'name' => 'Français'],
-        'es' => ['flag' => '🇪🇸', 'name' => 'Español'],
-        'zh' => ['flag' => '🇨🇳', 'name' => '中文'],
-        'ja' => ['flag' => '🇯🇵', 'name' => '日本語'],
-    ];
+    ]);
 
 @endphp
 

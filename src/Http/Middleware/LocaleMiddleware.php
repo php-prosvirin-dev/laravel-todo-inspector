@@ -10,9 +10,9 @@ class LocaleMiddleware
     public function handle(Request $request, Closure $next)
     {
         $locale = $request->get('lang', session('locale', config('app.locale', 'en')));
-        $supportedLocales = ['en', 'ru', 'uk', 'pl', 'de', 'fr', 'es', 'zh', 'ja'];
+        $availableLocales = array_keys(config('todo-inspector.locales', []));
 
-        if (in_array($locale, $supportedLocales)) {
+        if (in_array($locale, $availableLocales)) {
             app()->setLocale($locale);
             session(['locale' => $locale]);
         }
