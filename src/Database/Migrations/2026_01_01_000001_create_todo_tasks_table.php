@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Get the table name from config
-     */
     private function getTableName(): string
     {
         return config('todo-inspector.table_name', 'todo_inspector_tasks');
@@ -22,8 +19,8 @@ return new class extends Migration
             $table->id();
             $table->string('file_path');
             $table->integer('line_number');
-            $table->text('content');
-            $table->string('type'); // TODO, FIXME, HACK, REVIEW, NOTE
+            $table->longText('content');
+            $table->string('type');
             $table->string('priority')->default('MEDIUM');
             $table->string('author')->nullable();
             $table->string('assigned_to')->nullable();

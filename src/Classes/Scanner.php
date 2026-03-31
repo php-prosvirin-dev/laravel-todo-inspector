@@ -12,6 +12,8 @@ class Scanner
 
     protected array $extensions;
 
+    protected array $docPatterns;
+
     public function __construct()
     {
         $configPatterns = config('todo-inspector.patterns', [
@@ -20,6 +22,14 @@ class Scanner
             'HACK' => '/\/\/\s*HACK(?:\s*\(([^)]+)\))?\s*:?\s*(.+)/i',
             'REVIEW' => '/\/\/\s*REVIEW(?:\s*\(([^)]+)\))?\s*:?\s*(.+)/i',
             'NOTE' => '/\/\/\s*NOTE(?:\s*\(([^)]+)\))?\s*:?\s*(.+)/i',
+        ]);
+
+        $this->docPatterns = config('todo-inspector.doc-patterns', [
+            'TODO' => '/TODO\s*:?\s*(?:\[([^\]]+)\])?\s*(.*)/i',
+            'FIXME' => '/FIXME\s*:?\s*(?:\[([^\]]+)\])?\s*(?:@([a-zA-Z0-9_-]+))?\s*(.*)/i',
+            'HACK' => '/HACK\s*:?\s*(?:\[([^\]]+)\])?\s*(.*)/i',
+            'REVIEW' => '/REVIEW\s*:?\s*(?:\[([^\]]+)\])?\s*(?:@([a-zA-Z0-9_-]+))?\s*(.*)/i',
+            'NOTE' => '/NOTE\s*:?\s*(.*)/i',
         ]);
 
         $this->patterns = [];
@@ -142,10 +152,39 @@ class Scanner
             }
         }
 
+        $this->scanDocComments($content, $relativePath, $tasks);
+
         return $tasks;
     }
 
-    protected function extractTask(string $type, string $line, array $matches, string $filePath, int $lineNumber): ?array
+    protected function scanDocComments(string $content, string $relativePath, array &$tasks): void
+    {
+        $pattern = '/\/\*\*(.*?)\*\//s';
+
+        if (preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE)) {
+            foreach ($matches[1] as $match) {
+                $commentContent = $match[0];
+                $offset = $match[1];
+                $lineNumber = substr_count(substr($content, 0, $offset), "\n");
+                $commentLines = explode("\n", $commentContent);
+
+                foreach ($commentLines as $commentLine) {
+                    $cleanLine = preg_replace('/^\s*\*\s?/', '', $commentLine);
+
+                    foreach ($this->docPatterns as $type => $docPattern) {
+                        if (preg_match($docPattern, $cleanLine, $lineMatches)) {
+                            $taskData = $this->extractTaskFromDoc($type, $cleanLine, $lineMatches, $relativePath, $lineNumber);
+                            if ($taskData) {
+                                $tasks[] = $taskData;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected function extractTaskFromDoc(string $type, string $line, array $matches, string $filePath, int $lineNumber): ?array
     {
         $content = '';
         $priority = null;
@@ -154,32 +193,28 @@ class Scanner
         switch ($type) {
             case 'TODO':
                 $priority = isset($matches[1]) ? strtoupper($matches[1]) : null;
-                $content = trim($matches[2] ?? $matches[0] ?? '');
+                $content = trim($matches[2] ?? $matches[1] ?? $matches[0] ?? '');
                 break;
-
             case 'FIXME':
             case 'REVIEW':
                 $priority = isset($matches[1]) ? strtoupper($matches[1]) : null;
                 $author = $matches[2] ?? null;
                 $content = trim($matches[3] ?? $matches[0] ?? '');
                 break;
-
             case 'HACK':
                 $priority = isset($matches[1]) ? strtoupper($matches[1]) : null;
                 $content = trim($matches[2] ?? $matches[0] ?? '');
                 break;
-
             case 'NOTE':
                 $content = trim($matches[1] ?? $matches[0] ?? '');
                 break;
-
             default:
                 $content = trim($matches[1] ?? $matches[0] ?? '');
                 break;
         }
 
-        $content = preg_replace('/^\/\/\s*/', '', $content);
-        $content = preg_replace('/\s*'.preg_quote($type, '/').'\s*:?\s*/i', '', $content);
+        $content = preg_replace('/^\s*\*\s*/', '', $content);
+        $content = preg_replace('/\/\/\s*'.preg_quote($type, '/').'\s*:?\s*/i', '', $content);
         $content = trim($content);
 
         if (empty($content)) {
@@ -199,7 +234,64 @@ class Scanner
             'line_number' => $lineNumber + 1,
             'content' => $content,
             'type' => $type,
-            'priority' => $priority ?? 'MEDIUM',
+            'priority' => $priority ?? 'LOW',
+            'author' => $author,
+            'hash' => md5($filePath.$lineNumber.$line),
+        ];
+    }
+
+    protected function extractTask(string $type, string $line, array $matches, string $filePath, int $lineNumber): ?array
+    {
+        $content = '';
+        $priority = null;
+        $author = null;
+
+        switch ($type) {
+            case 'TODO':
+                $priority = isset($matches[1]) ? strtoupper($matches[1]) : null;
+                $content = trim($matches[2] ?? $matches[0] ?? '');
+                break;
+            case 'FIXME':
+            case 'REVIEW':
+                $priority = isset($matches[1]) ? strtoupper($matches[1]) : null;
+                $author = $matches[2] ?? null;
+                $content = trim($matches[3] ?? $matches[0] ?? '');
+                break;
+            case 'HACK':
+                $priority = isset($matches[1]) ? strtoupper($matches[1]) : null;
+                $content = trim($matches[2] ?? $matches[0] ?? '');
+                break;
+            case 'NOTE':
+                $content = trim($matches[1] ?? $matches[0] ?? '');
+                break;
+            default:
+                $content = trim($matches[1] ?? $matches[0] ?? '');
+                break;
+        }
+
+        $content = preg_replace('/^\/\/\s*/', '', $content);
+        $content = preg_replace('/\s*'.preg_quote($type, '/').'\s*:?\s*/i', '', $content);
+        $content = trim($content);
+        $content = mb_substr($content, 0, 1000);
+
+        if (empty($content)) {
+            return null;
+        }
+
+        if (! $priority) {
+            $priority = $this->extractPriority($line);
+        }
+
+        if (! $author) {
+            $author = $this->extractAuthor($line);
+        }
+
+        return [
+            'file_path' => $filePath,
+            'line_number' => $lineNumber + 1,
+            'content' => $content,
+            'type' => $type,
+            'priority' => $priority ?? 'LOW',
             'author' => $author,
             'hash' => md5($filePath.$lineNumber.$line),
         ];
@@ -211,7 +303,7 @@ class Scanner
             return strtoupper($matches[1]);
         }
 
-        return 'MEDIUM';
+        return 'LOW';
     }
 
     protected function extractAuthor(string $line): ?string

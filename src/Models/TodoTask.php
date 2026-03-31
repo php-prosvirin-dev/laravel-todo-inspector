@@ -30,6 +30,10 @@ class TodoTask extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected $attributes = [
+        'priority' => 'LOW',
+    ];
+
     public const TYPE_TODO = 'TODO';
 
     public const TYPE_FIXME = 'FIXME';
