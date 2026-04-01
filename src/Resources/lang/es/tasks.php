@@ -31,4 +31,6 @@ return [
     'in_progress' => 'En progreso',
     'done' => 'Completado',
     'wont_fix' => 'No se corregirá',
+    'logout' => 'Cerrar sesión',
+    'confirm_logout' => '¿Está seguro de que desea cerrar sesión?',
 ];

@@ -31,4 +31,6 @@ return [
     'in_progress' => 'In Bearbeitung',
     'done' => 'Erledigt',
     'wont_fix' => 'Wird nicht behoben',
+    'logout' => 'Abmelden',
+    'confirm_logout' => 'Sind Sie sicher, dass Sie sich abmelden möchten?',
 ];

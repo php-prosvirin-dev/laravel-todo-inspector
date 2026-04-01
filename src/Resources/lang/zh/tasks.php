@@ -31,4 +31,6 @@ return [
     'in_progress' => '进行中',
     'done' => '已完成',
     'wont_fix' => '不予修复',
+    'logout' => '退出',
+    'confirm_logout' => '确定要退出吗？',
 ];

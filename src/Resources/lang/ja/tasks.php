@@ -31,4 +31,6 @@ return [
     'in_progress' => '進行中',
     'done' => '完了',
     'wont_fix' => '修正しない',
+    'logout' => 'ログアウト',
+    'confirm_logout' => 'ログアウトしてもよろしいですか？',
 ];

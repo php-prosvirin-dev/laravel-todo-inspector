@@ -31,4 +31,6 @@ return [
     'in_progress' => 'W trakcie',
     'done' => 'Wykonane',
     'wont_fix' => 'Nie będzie naprawiane',
+    'logout' => 'Wyloguj',
+    'confirm_logout' => 'Czy na pewno chcesz się wylogować?',
 ];

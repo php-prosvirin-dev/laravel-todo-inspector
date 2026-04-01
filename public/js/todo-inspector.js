@@ -166,12 +166,81 @@
 
             document.body.appendChild(form);
             form.submit();
+        },
+
+        logout() {
+            const confirmMsg = window.tasksTranslations?.confirm_logout || 'Are you sure you want to logout?';
+
+            if (confirm(confirmMsg)) {
+                fetch(window.location.href, {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('logout:logout')
+                    }
+                }).then(() => {
+                    window.location.reload();
+                }).catch(() => {
+                    window.location.reload();
+                });
+            }
+        },
+
+        openModal(title, content) {
+            const modal = document.getElementById('todo-modal');
+            const modalContent = document.getElementById('todo-modal-content');
+            const modalText = document.getElementById('todo-modal-text');
+
+            modalText.textContent = content;
+
+            modal.classList.remove('hidden');
+
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    this.closeModal();
+                }
+            };
+
+            document.addEventListener('keydown', this.handleEscKey);
+            document.body.style.overflow = 'hidden';
+        },
+
+        closeModal() {
+            const modal = document.getElementById('todo-modal');
+            const modalContent = document.getElementById('todo-modal-content');
+
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.style.display = '';
+                document.body.style.overflow = '';
+            }, 300);
+
+            document.removeEventListener('keydown', this.handleEscKey);
+        },
+
+        handleEscKey(e) {
+            if (e.key === 'Escape') {
+                TodoInspector.closeModal();
+            }
         }
     };
 
     window.TodoInspector = TodoInspector;
     window.toggleTheme = () => TodoInspector.toggleTheme();
     window.bulkUpdate = (status) => TodoInspector.bulkUpdate(status);
+    window.logout = () => TodoInspector.logout();
+    window.openModal = (title, content) => TodoInspector.openModal(title, content);
+    window.closeModal = () => TodoInspector.closeModal();
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => TodoInspector.init());

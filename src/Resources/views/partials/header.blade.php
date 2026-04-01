@@ -31,5 +31,9 @@
         <a href="{{ route('todo-inspector.scan') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
             <i class="fas fa-sync-alt mr-2"></i> {{ __('tasks.scan_now') }}
         </a>
+
+        <button onclick="window.logout()" class="logout-btn group relative bg-red-500/20 hover:bg-red-500/30 text-red-200 hover:text-red-100 px-4 py-2 rounded-lg transition-all duration-200 border border-red-400/30 hover:border-red-400/50">
+            <i class="fas fa-sign-out-alt group-hover:translate-x-1 transition-transform duration-200"></i>
+        </button>
     </div>
 </div>

@@ -31,4 +31,6 @@ return [
     'in_progress' => 'In Progress',
     'done' => 'Done',
     'wont_fix' => "Won't Fix",
+    'logout' => 'Logout',
+    'confirm_logout' => 'Are you sure you want to logout?',
 ];

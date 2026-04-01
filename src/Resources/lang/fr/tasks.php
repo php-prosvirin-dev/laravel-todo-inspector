@@ -31,4 +31,6 @@ return [
     'in_progress' => 'En cours',
     'done' => 'Terminé',
     'wont_fix' => 'Ne sera pas corrigé',
+    'logout' => 'Déconnexion',
+    'confirm_logout' => 'Êtes-vous sûr de vouloir vous déconnecter ?',
 ];

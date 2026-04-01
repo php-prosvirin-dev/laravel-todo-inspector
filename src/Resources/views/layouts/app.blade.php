@@ -40,12 +40,21 @@
     </div>
 </div>
 
+<div id="todo-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden" style="display: none !important;">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="todo-modal-content">
+        <div class="px-6 py-4 max-h-[70vh] overflow-y-auto" id="todo-modal-body">
+            <p style="max-height: 300px;overflow-y: auto;" class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-words font-mono text-sm" id="todo-modal-text"></p>
+        </div>
+    </div>
+</div>
+
 <script>
     window.tasksTranslations = {
         select_task: '{{ __('tasks.select_task') }}',
         done: '{{ __('tasks.done') }}',
         in_progress: '{{ __('tasks.in_progress') }}',
-        confirm_update: '{{ __('tasks.confirm_update') }}'
+        confirm_update: '{{ __('tasks.confirm_update') }}',
+        confirm_logout: '{{ __('tasks.confirm_logout') }}'
     };
     window.bulkActionUrl = '{{ route('todo-inspector.bulk') }}';
 </script>

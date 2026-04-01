@@ -23,7 +23,14 @@
                     </span>
                 </td>
                 <td class="px-4 py-3">
-                    <div class="text-sm font-medium dark:text-white">{{ $task->short_content }}</div>
+                    <div class="text-sm font-medium dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                         onclick="openModal('Task #{{ $task->id }} - {{ $task->type }}', {{ json_encode($task->content) }})"
+                         title="Click to view full content">
+                        {{ $task->short_content }}
+                        <span class="inline-block ml-1 text-xs text-gray-400 dark:text-gray-500">
+                            <i class="fas fa-expand-alt"></i>
+                        </span>
+                    </div>
                 </td>
                 <td class="px-4 py-3">
                     <code class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded dark:text-gray-300 block">
