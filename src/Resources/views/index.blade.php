@@ -8,7 +8,3 @@
     @include('todo-inspector::partials.bulk-actions')
     @include('todo-inspector::partials.table')
 @endsection
-
-@push('scripts')
-    @include('todo-inspector::partials.scripts')
-@endpush

@@ -28,11 +28,16 @@ A powerful Laravel package to scan, manage, and track TODO, FIXME, HACK, REVIEW,
 composer require php-prosvirin-dev/laravel-todo-inspector
 ```
 
-# Publish everything
+### 2. Publish Package Assets
+
+Publish everything at once:
+
 ```bash
 php artisan vendor:publish --provider="Prosvirin\LaravelTodoInspector\TodoInspectorServiceProvider"
 ```
-# Or publish individually
+
+Or publish individually:
+
 ```bash
 php artisan vendor:publish --tag=todo-inspector-config      # Configuration
 php artisan vendor:publish --tag=todo-inspector-migrations  # Database migrations
@@ -40,38 +45,36 @@ php artisan vendor:publish --tag=todo-inspector-views       # Blade templates
 php artisan vendor:publish --tag=todo-inspector-lang        # Language files
 php artisan vendor:publish --tag=todo-inspector-assets      # CSS/JS assets
 ```
-# Run Migrations
+
+### 3. Run Migrations
+
 ```bash
 php artisan migrate
 ```
 
-# Configure Authentication
-Add credentials to your .env file to secure the web interface:
-```bash
+### 4. Configure Authentication
+
+Add credentials to your `.env` file to secure the web interface:
+
+```env
 TODO_INSPECTOR_LOGIN=admin
 TODO_INSPECTOR_PASSWORD=your-secure-password
 ```
 
-# Configuration
+## Configuration
 
-The configuration file is located at config/todo-inspector.php after publishing.
+The configuration file is located at `config/todo-inspector.php` after publishing.
 
-# Basic Configuration
+### Basic Configuration
+
 ```php
 return [
-    // Database table name (can be customized)
     'table_name' => env('TODO_INSPECTOR_TABLE', 'todo_inspector_tasks'),
-    
-    // Default theme: 'light', 'dark', or 'auto'
     'theme' => env('TODO_INSPECTOR_THEME', 'dark'),
-    
-    // Authentication credentials
     'auth' => [
         'login' => env('TODO_INSPECTOR_LOGIN', 'admin'),
         'password' => env('TODO_INSPECTOR_PASSWORD', 'password'),
     ],
-    
-    // Supported languages
     'locales' => [
         'en' => ['flag' => '🇬🇧', 'name' => 'English'],
         'ru' => ['flag' => '🇷🇺', 'name' => 'Русский'],
@@ -83,46 +86,14 @@ return [
         'zh' => ['flag' => '🇨🇳', 'name' => '中文'],
         'ja' => ['flag' => '🇯🇵', 'name' => '日本語'],
     ],
-    
-    // File extensions to scan
-    'extensions' => [
-        'php', 'js', 'vue', 'blade.php', 'css', 'scss',
-    ],
-    
-    // Directories to exclude from scanning
-    'exclude_dirs' => [
-        'vendor', 'node_modules', 'storage', 'bootstrap/cache', '.git', 'tests',
-    ],
-    
-    // Files to exclude (supports wildcards)
-    'exclude_files' => [
-        'test-*.php', '*_test.php', '*.test.php',
-    ],
-    
-    // Patterns for scanning (customize as needed)
-    'patterns' => [
-        'TODO' => '/\/\/\s*TODO\s*:?\s*(?:\[([^\]]+)\])?\s*(.*)/i',
-        'FIXME' => '/\/\/\s*FIXME\s*:?\s*(?:\[([^\]]+)\])?\s*(?:@([a-zA-Z0-9_-]+))?\s*(.*)/i',
-        'HACK' => '/\/\/\s*HACK\s*:?\s*(?:\[([^\]]+)\])?\s*(.*)/i',
-        'REVIEW' => '/\/\/\s*REVIEW\s*:?\s*(?:\[([^\]]+)\])?\s*(?:@([a-zA-Z0-9_-]+))?\s*(.*)/i',
-        'NOTE' => '/\/\/\s*NOTE\s*:?\s*(.*)/i',
-    ],
-    
-    // Patterns for scanning php-doc (customize as needed)
-    'doc_patterns' => [
-        'TODO' => '/TODO\s*:?\s*(?:\[([^\]]+)\])?\s*(.*)/i',
-        'FIXME' => '/FIXME\s*:?\s*(?:\[([^\]]+)\])?\s*(?:@([a-zA-Z0-9_-]+))?\s*(.*)/i',
-        'HACK' => '/HACK\s*:?\s*(?:\[([^\]]+)\])?\s*(.*)/i',
-        'REVIEW' => '/REVIEW\s*:?\s*(?:\[([^\]]+)\])?\s*(?:@([a-zA-Z0-9_-]+))?\s*(.*)/i',
-        'NOTE' => '/NOTE\s*:?\s*(.*)/i',
-    ],
-    
-    // GitHub repository for file links (optional)
+    'extensions' => ['php', 'js', 'vue', 'blade.php', 'css', 'scss'],
+    'exclude_dirs' => ['vendor', 'node_modules', 'storage', 'bootstrap/cache', '.git', 'tests'],
+    'exclude_files' => ['test-*.php', '*_test.php', '*.test.php'],
     'github_repo' => env('TODO_INSPECTOR_GITHUB_REPO', null),
 ];
 ```
 
-# Usage
+## Usage
 
 Run the scan command to find all TODO comments:
 
@@ -131,12 +102,9 @@ php artisan todo:scan
 ```
 
 Options:
-
---clear - Clear existing tasks before scanning
-
---type=TODO - Scan only specific type (TODO, FIXME, HACK, REVIEW, NOTE)
-
---path=app/Http - Scan only specific directory
+- `--clear` - Clear existing tasks before scanning
+- `--type=TODO` - Scan only specific type (TODO, FIXME, HACK, REVIEW, NOTE)
+- `--path=app/Http` - Scan only specific directory
 
 Example:
 
@@ -144,9 +112,9 @@ Example:
 php artisan todo:scan --clear --type=FIXME --path=app/Http
 ```
 
-# Schedule Automatic Scans
+## Schedule Automatic Scans
 
-Add to app/Console/Kernel.php:
+Add to `app/Console/Kernel.php`:
 
 ```php
 protected function schedule(Schedule $schedule): void
@@ -156,37 +124,39 @@ protected function schedule(Schedule $schedule): void
 }
 ```
 
-# Access Web Interface
+## Access Web Interface
 
-```bash
+```
 http://your-project.test/todo-inspector
 ```
 
-Login with credentials configured in .env.
+Login with credentials configured in `.env`.
 
-# Features in Web Interface
+## Features in Web Interface
 
-Dashboard
-   - Statistics Cards - Total tasks and breakdown by type
-   - Priority Statistics - Visual breakdown by priority level
-   - Click Filters - Click on any statistic card to filter tasks
+**Dashboard**
+- Statistics Cards - Total tasks and breakdown by type
+- Priority Statistics - Visual breakdown by priority level
+- Click Filters - Click on any statistic card to filter tasks
 
-Task Management
-   - Search - Search across content, file paths, and authors
-   - Filters - Filter by type, priority, and status
-   - Bulk Actions - Update multiple tasks at once
-   - Status Updates - Change task status directly from the table
-   - File Links - Click the code icon to open the file in PhpStorm
+**Task Management**
+- Search - Search across content, file paths, and authors
+- Filters - Filter by type, priority, and status
+- Bulk Actions - Update multiple tasks at once
+- Status Updates - Change task status directly from the table
+- File Links - Click the code icon to open the file in PhpStorm
 
-Theme & Language
-   - Dark/Light Mode - Toggle with persistent preference
-   - Multi-language - Select from 9 languages, saved to localStorage
+**Theme & Language**
+- Dark/Light Mode - Toggle with persistent preference
+- Multi-language - Select from 9 languages, saved to localStorage
 
-# Comment Format Examples
+## Comment Format Examples
+
 The package detects comments in the following formats:
 
-Single-line Comments
-```bash
+**Single-line Comments**
+
+```php
 // TODO: Fix this bug
 // FIXME: @username Memory leak here
 // HACK: [HIGH] Temporary workaround
@@ -194,77 +164,78 @@ Single-line Comments
 // NOTE: Important performance consideration
 ```
 
-Multi-line Comments
-```bash
+**Multi-line Comments**
+
+```php
 /**
- * TODO: Refactor this method
- * FIXME: @developer Edge case not handled
- * REVIEW: Architecture decision needed
- */
+* TODO: Refactor this method
+* FIXME: @developer Edge case not handled
+* REVIEW: Architecture decision needed
+  */
 ```
 
-# Priority Tags
+## Priority Tags
+
 Use brackets to specify priority:
+- `[LOW]` - Low priority
+- `[MEDIUM]` - Medium priority (default)
+- `[HIGH]` - High priority
+- `[CRITICAL]` - Critical priority
 
-[LOW] - Low priority
+## Author Tags
 
-[MEDIUM] - Medium priority (default)
+Use `@username` to assign tasks to specific developers.
 
-[HIGH] - High priority
+## Customization
 
-[CRITICAL] - Critical priority
-
-# Author Tags
-Use @username to assign tasks to specific developers.
-
-# Customization
-Publish views and customize:
+### Override Views
 
 ```bash
 php artisan vendor:publish --tag=todo-inspector-views
 ```
 
-Views will be copied to resources/views/vendor/todo-inspector/. Modify them as needed.
+Views will be copied to `resources/views/vendor/todo-inspector/`. Modify them as needed.
 
-# Override Translations
-Publish language files:
+### Override Translations
+
 ```bash
 php artisan vendor:publish --tag=todo-inspector-lang
 ```
-Translations will be copied to resources/lang/. Add or modify translations.
 
-# Custom CSS/JS
+Translations will be copied to `resources/lang/vendor/todo-inspector/`. Add or modify translations.
+
+### Custom CSS/JS
 
 ```bash
 php artisan vendor:publish --tag=todo-inspector-assets
 ```
 
-Assets will be copied to public/vendor/todo-inspector/. Update CSS or JS files directly.
+Assets will be copied to `public/vendor/todo-inspector/`. Update CSS or JS files directly.
 
-# Troubleshooting
+## Troubleshooting
 
-Tasks Not Found
+**Tasks Not Found**
+- Check file extensions in config
+- Verify exclude directories don't include your code
+- Ensure comments match the expected patterns
 
- - Check file extensions in config
- - Verify exclude directories don't include your code
- - Ensure comments match the expected patterns
+**Authentication Issues**
+- Verify credentials in `.env` file
+- Clear config cache: `php artisan config:clear`
 
-Authentication Issues
+**Translation Not Working**
+- Publish language files: `php artisan vendor:publish --tag=todo-inspector-lang`
+- Clear view cache: `php artisan view:clear`
 
- - Verify credentials in .env file
- - Clear config cache: php artisan config:clear
+## Contributing
 
-Translation Not Working
- - Publish language files: php artisan vendor:publish --tag=todo-inspector-lang
- - Clear view cache: php artisan view:clear
-
-# Contributing
 Contributions are welcome! Please submit a Pull Request or create an Issue.
 
-# License
-The MIT License (MIT). Please see License File for more information.
+## License
 
-# Credits
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
 
- - Created by Yauheni Prasviryn
- - Built with Laravel and Tailwind CSS
+## Credits
+
+- Created by [Yauheni Prasviryn](https://github.com/php-prosvirin-dev)
+- Built with [Laravel](https://laravel.com) and [Tailwind CSS](https://tailwindcss.com)

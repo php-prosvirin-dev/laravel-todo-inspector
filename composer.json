@@ -58,7 +58,8 @@
   "scripts": {
     "test": "pest",
     "test:coverage": "pest --coverage",
-    "format": "pint"
+    "test:unit": "pest tests/Unit",
+    "test:feature": "pest tests/Feature"
   },
   "config": {
     "allow-plugins": {
