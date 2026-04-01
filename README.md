@@ -2,6 +2,8 @@
 
 A powerful Laravel package to scan, manage, and track TODO, FIXME, HACK, REVIEW, and NOTE comments across your entire project. Transform scattered code comments into a manageable technical debt backlog with a beautiful web interface.
 
+![Todo Inspector Dashboard](docs/images/Screenshot.png)
+
 ## Features
 
 - 🔍 **Smart Scanning** - Detects TODO, FIXME, HACK, REVIEW, NOTE comments in single-line and multi-line formats
