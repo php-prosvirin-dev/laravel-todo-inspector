@@ -1,5 +1,6 @@
 {
   "name": "php-prosvirin-dev/laravel-todo-inspector",
+  "version": "1.0.0",
   "description": "Scan and manage TODO, FIXME, HACK comments in Laravel projects",
   "type": "library",
   "license": "MIT",
@@ -25,11 +26,11 @@
   },
   "require": {
     "php": "^8.1",
-    "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
-    "illuminate/console": "^10.0|^11.0|^12.0|^13.0",
-    "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
-    "illuminate/filesystem": "^10.0|^11.0|^12.0|^13.0",
-    "illuminate/routing": "^10.0|^11.0|^12.0|^13.0"
+    "illuminate/support": "^9.0|^10.0|^11.0|^12.0|^13.0",
+    "illuminate/console": "^9.0|^10.0|^11.0|^12.0|^13.0",
+    "illuminate/database": "^9.0|^10.0|^11.0|^12.0|^13.0",
+    "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0|^13.0",
+    "illuminate/routing": "^9.0|^10.0|^11.0|^12.0|^13.0"
   },
   "require-dev": {
     "orchestra/testbench": "^8.0|^9.0|^10.0",
@@ -58,7 +59,8 @@
   "scripts": {
     "test": "pest",
     "test:coverage": "pest --coverage",
-    "format": "pint"
+    "test:unit": "pest tests/Unit",
+    "test:feature": "pest tests/Feature"
   },
   "config": {
     "allow-plugins": {
